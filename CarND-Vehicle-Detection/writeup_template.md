@@ -54,7 +54,6 @@ I tried a few values, but a lower number seemed to not give good histograms whil
 I stuck with this recommendation from class. Also, with the pix_per_cell and only a 64x64 image, this cannot be much bigger.
 
 
-
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 code cell 21 is to train the svm model. 
@@ -63,7 +62,7 @@ I loaded the GTI and KITTI extracted data for vehicles and the GTI and "extras" 
     Vehicle array: 8792 rows, 3696 columns
     Non-Vehicle array: 8968 rows, 3696 columns
 
-I then split non-randomly into train and test sets to make sure the train and test sets are not too similar to each other.I get the following matrix shapes:
+I then split randomly into train and test sets (20%)
 
     Training set shape (14208, 3696)
     Testing set shape (3552, 3696)
@@ -122,7 +121,6 @@ After this, we work to reduce false positives and smoothen detection by combinin
 
 ![](./output_images/consecutive_detections.jpg)
 
-We see good detection of vehicles with a stubborn false positive right infront of the vehicle. This would be catastrophic since it implies the car should immediately brake hard. Luckily it is only present in a few frames.
 
 Next, we apply the heatmap technique discussed in class. For box, for every pixel inside that box, we add 1 to the heatmap. This results in:
 
@@ -140,7 +138,7 @@ which were then overlayed on the original image to get:
 
 ![](./output_images/final_image.jpg)
 
-I also did an additional stabilitization step using the same heatmap scheme where I save the final boxes for the last 12 frames and require a threshold of 6, meaning I display the overlaps of boxes that were present in at least the last 6 frames. I was hoping this would make the boxes more stable, but it did not seem to work as well as I hoped.
+I also did an additional stabilitization step using the same heatmap scheme where I save the final boxes for the last 12 frames and require a threshold of 6, meaning I display the overlaps of boxes that were present in at least the last 6 frames. 
 
 With all the cells used for tuning parameters, the video workflow is summarized in the function process_image(img). 
 
