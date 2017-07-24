@@ -158,7 +158,7 @@ output = 'project_output.mp4'
 challenge_clip = VideoFileClip('project_video.mp4').fl_image(pipeline)
 %time challenge_clip.write_videofile(output, audio=False)
 ```
-Here's a [link to my video result](./project_output.mp4)
+Here's a [link to my video result](./project_output_2.mp4)
 
 ---
 
@@ -166,6 +166,8 @@ Here's a [link to my video result](./project_output.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-I know my model is not robust enough because I only use red-channel, which is somewhat sensitive to lightness.  To imporve the robustness, I will combine with other channels like s-channel and sobelx. And other paraterms such as margin, mask size may be also tuned. 
+This approach doesn't require much data since there is no model to train but the manual tuning of parameters is tedious and only through many iterations and exposure to different driving conditions can a good set of parameters be found. Even then there's no measurement of how well the parameters work on a wide array of videos. Tuning them on only one or two videos certainly won't be robust.
 
-Actually, the most difficut thing is find the intial lane line centers, which may require a lot of manual exploration.
+Improvement can be had at the binary transforms section by doing some weighted average not at the binary level but at the transformed level. For example, each value of saturation will have a high confidence level based on closely within the parameters and if the same pixels are also within a good range with respect to the Sobel transforms then it can be of higher confidence. The polynomial fit can then be weighted using the confidence of these pixels.
+
+There was not testing for night time videos so that require more tuning or even a seperate set of parameters. In embedded systems, such added complexity will be weighed against limited device processing power, especially since the device will be busy with other tasks as well. This approach seems to be computationally expensive, with the many transforms involved.
